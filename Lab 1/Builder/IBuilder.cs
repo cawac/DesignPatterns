@@ -1,19 +1,8 @@
 ﻿namespace Builder;
 
-public interface IBuilder
+public interface IBuilder<out TCar>
 {
-    void BuildBasePart();
-    
-    void BuildAdditionPart();
-    
-    void BuildLuxuryPart();
-    
-    void Reset();
-}
-
-public interface IBuilder<T>: IBuilder
-{
-    public T Car { get; set; }
-
-    T ReturnResult();
+    public TCar? GetResult();
+        
+    public void Reset();
 }
