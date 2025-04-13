@@ -1,34 +1,50 @@
-﻿using Builder.Instances.Vehicles;
+﻿namespace Builder;
 
-namespace Builder;
-
-public class VehicleBuilder: IBuilder<IVehicle>
+public class VehicleBuilder: IBuilder<Vehicle>
 {
-    protected IVehicle? Car { get; set; }
+    protected Vehicle? Car { get; set; }
     
-    public void Build(EColor Color, EVehicleClass VehicleClass, EWheelDriveType WheelDriveType)
+    public void BuildBase(string name, double weight, double length, double maxSpeed)
     {
-        if (WheelDriveType == EWheelDriveType.Front)
+        if (Car != null)
         {
-            this.Car = new Honda();
-        }
-        else if (WheelDriveType == EWheelDriveType.All)
-        {
-            this.Car = new Audi();
+            Car.Name = name;
+            Car.Weight = weight;
+            Car.Length = length;
+            Car.MaxSpeed = maxSpeed;
         }
         else
         {
-            this.Car = new Tesla();
+            this.Car = new Vehicle
+            {
+                Name = name,
+                Weight = weight,
+                Length = length,
+                MaxSpeed = maxSpeed
+            };
         }
     }
     
-    public IVehicle? GetResult()
+    public void BuildSpecific(EWheelDriveType wheelDriveType, EVehicleClass vehicleClass, EColor color)
     {
-        return Car;
+        if (this.Car == null)
+        {
+            return;
+        }
+        this.Car.WheelDriveType = wheelDriveType;
+        this.Car.VehicleClass = vehicleClass;
+        this.Car.Color = color;
+    }
+
+    public Vehicle? GetResult()
+    {
+        var car = this.Car;
+        this.Reset();
+        return car;
     }
 
     public void Reset()
     {
-        return;
+        this.Car = null;
     }
 }

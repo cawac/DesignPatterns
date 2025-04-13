@@ -1,34 +1,50 @@
-﻿using Builder.Instances;
+﻿namespace Builder;
 
-namespace Builder;
-
-public class CargoBuilder: IBuilder<ICargo>
+public class CargoBuilder: IBuilder<Cargo>
 {
-    protected ICargo? Car { get; set; }
-
-    public void Build(double Tonnage, double TankVolume, int AxlesAmount)
+    protected Cargo? Car { get; set; }
+    
+    public void BuildBase(string name, double weight, double length, double maxSpeed)
     {
-        if (AxlesAmount == 3)
+        if (Car != null)
         {
-            this.Car = new Scania();
+            Car.Name = name;
+            Car.Weight = weight;
+            Car.Length = length;
+            Car.MaxSpeed = maxSpeed;
         }
-        else if (AxlesAmount == 4)
+        else
         {
-            this.Car = new Man();
-        }
-        else if (AxlesAmount == 5)
-        {
-            this.Car = new Volvo();
+            this.Car = new Cargo
+            {
+                Name = name,
+                Weight = weight,
+                Length = length,
+                MaxSpeed = maxSpeed
+            };
         }
     }
     
-    public ICargo? GetResult()
+    public void BuildSpecific(double tonnage, double tankVolume, int axlesAmount)
     {
-        return this.Car;
+        if (this.Car == null)
+        {
+            return;
+        }
+        this.Car.Tonnage = tonnage;
+        this.Car.TankVolume = tankVolume;
+        this.Car.AxlesAmount = axlesAmount;
+    }
+
+    public Cargo? GetResult()
+    {
+        var car = this.Car;
+        this.Reset();
+        return car;
     }
 
     public void Reset()
     {
-        return;
+        this.Car = null;
     }
 }

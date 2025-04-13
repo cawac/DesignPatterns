@@ -1,34 +1,50 @@
-﻿using Builder.Instances.Tanks;
+﻿namespace Builder;
 
-namespace Builder;
-
-public class TankBuilder: IBuilder<ITank>
+public class TankBuilder: IBuilder<Tank>
 {
-    protected ITank? Car { get; set; } = null;
+    protected Tank? Car { get; set; }
     
-    public void Build(int CrewSize, double ProjectileCaliber, int ShotsPerMinute)
+    public void BuildBase(string name, double weight, double length, double maxSpeed)
     {
-        if (CrewSize == 5)
+        if (Car != null)
         {
-            this.Car = new Tiger();
+            Car.Name = name;
+            Car.Weight = weight;
+            Car.Length = length;
+            Car.MaxSpeed = maxSpeed;
         }
-        else if (CrewSize == 4)
+        else
         {
-            this.Car = new Merkava();
-        }
-        else if (CrewSize == 3)
-        {
-            this.Car = new Abrams();
+            this.Car = new Tank
+            {
+                Name = name,
+                Weight = weight,
+                Length = length,
+                MaxSpeed = maxSpeed
+            };
         }
     }
     
-    public ITank? GetResult()
+    public void BuildSpecific(double projectileCaliber, int shotsPerMinute, int crewSize)
     {
-        return Car;
+        if (this.Car == null)
+        {
+            return;
+        }
+        this.Car.ProjectileCaliber = projectileCaliber;
+        this.Car.ShotsPerMinute = shotsPerMinute;
+        this.Car.CrewSize = crewSize;
+    }
+
+    public Tank? GetResult()
+    {
+        var car = this.Car;
+        this.Reset();
+        return car;
     }
 
     public void Reset()
     {
-        return;
+        this.Car = null;
     }
 }

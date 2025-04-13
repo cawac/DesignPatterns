@@ -25,11 +25,13 @@ public enum EVehicleClass
     Coupe = 4,
 }
 
-public interface IVehicle : ICar
+public class Vehicle : ICar
 {
+    public string Name { get; set; }
+    public double Weight { get; set; }
+    public double Length { get; set; }
+    public double MaxSpeed { get; set; }
     public EWheelDriveType WheelDriveType { get; set; }
-
     public EVehicleClass VehicleClass { get; set; }
-
     public EColor Color { get; set; }
 }
