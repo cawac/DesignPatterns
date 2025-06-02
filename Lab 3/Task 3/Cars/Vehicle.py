@@ -1,4 +1,7 @@
+from dataclasses import dataclass
 from enum import Enum
+
+
 from .Car import Car
 
 
@@ -25,17 +28,8 @@ class EVehicleClass(Enum):
     COUPE = 4 
 
 
+@dataclass
 class Vehicle(Car):
-    def __init__(self, name: str, weight: float, length: float, max_speed: float,
-                 wheel_drive_type: EWheelDriveType = EWheelDriveType.NONE,
-                 vehicle_class: EVehicleClass = EVehicleClass.NONE,
-                 color: EColor = EColor.NONE) -> None:
-        super().__init__(name, weight, length, max_speed)
-        self.wheel_drive_type: EWheelDriveType = wheel_drive_type
-        self.vehicle_class: EVehicleClass = vehicle_class
-        self.color: EColor = color
-
-    def __repr__(self) -> str:
-        return (f"Vehicle(name='{self.name}', weight={self.weight}, length={self.length}, "
-                f"max_speed={self.max_speed}, wheel_drive_type={self.wheel_drive_type.name}, "
-                f"vehicle_class={self.vehicle_class.name}, color={self.color.name})") 
+    wheel_drive_type: EWheelDriveType
+    vehicle_class: EVehicleClass
+    color: EColor
