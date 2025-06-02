@@ -1,64 +1,85 @@
-from typing import Any, Dict, List
+import random
+from abc import ABC, abstractmethod
+from enum import StrEnum
+from typing import List, Optional
 
-class Blackboard:
-    def __init__(self) -> None:
-        self.data: Dict[str, Any] = {}
-        self.history: List[str] = []
 
-    def write(self, key: str, value: Any) -> None:
-        self.data[key] = value
-        self.history.append(f"Wrote {key}: {value}")
+class EIndicator(StrEnum):
+    NONE = "None"
+    ISSUE = "Issue"
+    PULLREQUEST = "PullRequest"
+    BRANCH = "Branch"
 
-    def read(self, key: str) -> Any:
-        value = self.data.get(key)
-        self.history.append(f"Read {key}: {value}")
-        return value
 
-    def show_history(self) -> None:
-        print("Blackboard history:")
-        for entry in self.history:
-            print(entry)
 
-class KnowledgeSource:
-    def __init__(self, name: str) -> None:
-        self.name = name
+class Blackboard(ABC):
+    @abstractmethod
+    def get(self, key):
+        pass
 
-    def process(self, blackboard: Blackboard) -> None:
-        pass  # To be implemented by subclasses
+    @abstractmethod
+    def update(self, key, value):
+        pass
 
-class AddKnowledgeSource(KnowledgeSource):
-    def process(self, blackboard: Blackboard) -> None:
-        a = blackboard.read('a')
-        b = blackboard.read('b')
-        if a is not None and b is not None:
-            result = a + b
-            blackboard.write('sum', result)
-            print(f"{self.name}: Added {a} + {b} = {result}")
+class ConcreteBlackboard(Blackboard):
+    def __init__(self):
+        self.__data: dict = {}
 
-class MultiplyKnowledgeSource(KnowledgeSource):
-    def process(self, blackboard: Blackboard) -> None:
-        a = blackboard.read('a')
-        b = blackboard.read('b')
-        if a is not None and b is not None:
-            result = a * b
-            blackboard.write('product', result)
-            print(f"{self.name}: Multiplied {a} * {b} = {result}")
+    def get(self, key):
+        return self.__data.get(key)
+
+    def update(self, key, value) -> None:
+        self.__data[key] = value
+
+class KnowledgeSource(ABC):
+    @abstractmethod
+    def canExecute(self, blackboard: Blackboard) -> bool:
+        pass
+
+    @abstractmethod
+    def execute(self, blackboard: Blackboard) -> None:
+        pass
+
+class IssueSensor(KnowledgeSource):
+    def canExecute(self, blackboard: Blackboard) -> bool:
+        return True
+
+    def execute(self, blackboard: Blackboard) -> None:
+        blackboard.update(EIndicator.ISSUE, blackboard.get(EIndicator.ISSUE) + random.randint(1, 5))
+
+class PullRequestSensor(KnowledgeSource):
+    def canExecute(self, blackboard: Blackboard) -> bool:
+        return True
+
+    def execute(self, blackboard: Blackboard) -> None:
+        blackboard.update(EIndicator.PULLREQUEST, blackboard.get(EIndicator.PULLREQUEST) + 1)
+
+class BranchSensor(KnowledgeSource):
+    def canExecute(self, blackboard: Blackboard) -> bool:
+        return True
+
+    def execute(self, blackboard: Blackboard) -> None:
+        blackboard.update(EIndicator.BRANCH, blackboard.get(EIndicator.BRANCH) + random.randint(0, 2))
+
+class IssueAlert(KnowledgeSource):
+    def canExecute(self, blackboard: Blackboard) -> bool:
+        issue = blackboard.get(EIndicator.ISSUE)
+        pull_request = blackboard.get(EIndicator.PULLREQUEST)
+        branch = blackboard.get(EIndicator.BRANCH)
+        return issue and pull_request and branch
+
+    def execute(self, blackboard: Blackboard) -> None:
+        if blackboard.get(EIndicator.ISSUE) > 10:
+            print("[IssuesAlert] ALARM amount of issues more than 10!")
+        else:
+            print("[IssuesAlert] Everything fine")
 
 class Controller:
-    def __init__(self, blackboard: Blackboard, sources: List[KnowledgeSource]) -> None:
-        self.blackboard = blackboard
-        self.sources = sources
+    def __init__(self, blackboard: Blackboard, sources: List[KnowledgeSource]):
+        self.blackboard: Blackboard = blackboard
+        self.sources: List[KnowledgeSource] = sources
 
-    def run(self) -> None:
+    def run(self):
         for source in self.sources:
-            source.process(self.blackboard)
-        self.blackboard.show_history()
-
-if __name__ == "__main__":
-    blackboard = Blackboard()
-    blackboard.write('a', 5)
-    blackboard.write('b', 3)
-
-    sources = [AddKnowledgeSource("Adder"), MultiplyKnowledgeSource("Multiplier")]
-    controller = Controller(blackboard, sources)
-    controller.run() 
+            if source.canExecute(self.blackboard):
+                source.execute(self.blackboard)

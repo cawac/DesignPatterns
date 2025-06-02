@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from typing import List
 
 
-from Cars.Car import Car
-from Observer import Observer
+from сars.car import Car
+from observer import Observer
 
 
 class BaseContainer(ABC):

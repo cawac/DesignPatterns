@@ -1,5 +1,5 @@
-from .Shape import Shape
-from .Visitor import Visitor
+from .shape import Shape
+from .visitor import Visitor
 
 class Torus(Shape):
     def __init__(self, major_radius: float, minor_radius: float):

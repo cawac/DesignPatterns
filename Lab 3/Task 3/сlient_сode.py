@@ -1,8 +1,8 @@
-from Cars.Vehicle import Vehicle, EVehicleClass, EWheelDriveType, EColor
-from Cars.Tank import Tank
-from Cars.Cargo import Cargo
-from Container import Container
-from Observer import CarAppearanceObserver
+from сars.vehicle import Vehicle, EVehicleClass, EWheelDriveType, EColor
+from сars.tank import Tank
+from сars.cargo import Cargo
+from container import Container
+from observer import CarAppearanceObserver
 
 def main() -> None:
     container: Container = Container()
@@ -20,7 +20,6 @@ def main() -> None:
     container.add_car(car3)
 
     container.update_car(car1, weight=100, max_speed=100, wheel_drive_type=EWheelDriveType.BACK)
-    print(car1)
 
 if __name__ == "__main__":
     main() 

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 
-from .Car import Car
+from .car import Car
 
 
 @dataclass

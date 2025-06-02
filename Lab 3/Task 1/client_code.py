@@ -1,8 +1,8 @@
-from geometry.Sphere import Sphere
-from geometry.Parallelepiped import Parallelepiped
-from geometry.Torus import Torus
-from geometry.Cube import Cube
-from VolumeVisitor import VolumeVisitor
+from geometry.sphere import Sphere
+from geometry.parallelepiped import Parallelepiped
+from geometry.torus import Torus
+from geometry.cube import Cube
+from volume_visitor import VolumeVisitor
 
 
 def main():

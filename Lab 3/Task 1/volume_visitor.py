@@ -1,10 +1,10 @@
 import math
 
-from geometry.Visitor import Visitor
-from geometry.Sphere import Sphere
-from geometry.Parallelepiped import Parallelepiped
-from geometry.Torus import Torus
-from geometry.Cube import Cube
+from geometry.visitor import Visitor
+from geometry.sphere import Sphere
+from geometry.parallelepiped import Parallelepiped
+from geometry.torus import Torus
+from geometry.cube import Cube
 
 class VolumeVisitor(Visitor):
     def visit_sphere(self, sphere: Sphere):

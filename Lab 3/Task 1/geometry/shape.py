@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from .Visitor import Visitor
+from .visitor import Visitor
 
 class Shape(ABC):
     @abstractmethod

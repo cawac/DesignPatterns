@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-from Cars.Car import Car
+from сars.car import Car
 
 
 class Observer(ABC):
